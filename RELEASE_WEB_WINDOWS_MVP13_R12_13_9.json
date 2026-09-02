@@ -1,0 +1,16 @@
+{
+  "version": "RC27.14 WEB/WINDOWS MVP13 R12.13.9",
+  "engine": "RC26.6",
+  "date": "2026-09-01",
+  "scope": "SIGNED_PDF_MANUAL_DECISION_HYDRATION_AND_STALE_SERVER_RESTART",
+  "changes": [
+    "Consolida a baixa manual a partir da fotografia persistida, validation embutida e arquivo canônico de decisões antes de qualquer DACTE/PDF.",
+    "Reconhece linhas antigas já marcadas como OK MANUAL/OK EXTRA AUTORIZADO mesmo quando o registro canônico não pode mais ser resolvido.",
+    "Pré-constrói o bloco compacto manual antes do fluxo de assinatura para evitar reentrada com bloco antigo/incompleto.",
+    "Mantém a divergência automática visível, mas não bloqueia PDF/lote assinado quando existe aprovação manual efetiva.",
+    "Justificativa, responsável e data passam a possuir campos explícitos no bloco compacto e são renderizados mesmo em fotografias antigas.",
+    "Inicializador Local + Online reinicia automaticamente um servidor antigo que ainda esteja escutando a porta 8765 com versão diferente da R12.13.9.",
+    "Mantém fail-closed para falso OK automático sem baixa manual aprovada.",
+    "Motor comercial RC26.6 preservado."
+  ]
+}

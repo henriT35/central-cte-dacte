@@ -1,0 +1,9 @@
+from __future__ import annotations
+
+APP_VERSION_SHORT = "2.7.0 RC26.6"
+APP_VERSION = "2.7.0 RC26.6 — Diferença JSP sem gross-up presumido"
+REPORT_VERSION = "2.7.0-RC26.6"
+BRIDGE_VERSION = APP_VERSION_SHORT
+RELEASE_SLUG = "2_7_0_RC26_6"
+
+__all__ = ["APP_VERSION_SHORT", "APP_VERSION", "REPORT_VERSION", "BRIDGE_VERSION", "RELEASE_SLUG"]

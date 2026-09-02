@@ -1,0 +1,445 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark">
+  <title>Central CT-e / DACTE — Web Local Seguro</title>
+  <link rel="icon" href="logo_rodovitor.png">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <section id="auth-gate" class="auth-gate hidden" aria-live="polite">
+    <div class="auth-card">
+      <div class="auth-brand"><img src="logo_rodovitor.png" alt=""><div><strong>Central CT-e</strong><span>DACTE · Acesso seguro</span></div></div>
+      <div class="auth-copy"><small id="auth-kicker">Acesso local protegido</small><h1 id="auth-title">Entrar no sistema</h1><p id="auth-description">Use seu usuário e senha para acessar o ambiente isolado.</p></div>
+      <form id="auth-form" class="auth-form">
+        <label id="auth-display-name-wrap" class="hidden">Nome de exibição<input id="auth-display-name" type="text" maxlength="100" autocomplete="name" placeholder="Ex.: Henrique Sousa"></label>
+        <label>Usuário<input id="auth-username" type="text" minlength="3" maxlength="40" autocomplete="username" required placeholder="seu.usuario"></label>
+        <label>Senha<input id="auth-password" type="password" minlength="10" maxlength="200" autocomplete="current-password" required placeholder="Mínimo de 10 caracteres"></label>
+        <label id="auth-confirm-wrap" class="hidden">Confirmar senha<input id="auth-confirm-password" type="password" minlength="10" maxlength="200" autocomplete="new-password"></label>
+        <div id="auth-error" class="auth-error hidden"></div>
+        <button id="auth-submit" class="button primary auth-submit" type="submit">Entrar</button>
+      </form>
+      <div class="auth-security-note"><img src="icons/lock.svg" alt=""><span>Senhas protegidas com PBKDF2; sessão HttpOnly e separação de dados por usuário.</span></div>
+    </div>
+  </section>
+
+  <div id="app" class="app-shell hidden">
+    <aside id="sidebar" class="sidebar" aria-label="Navegação principal">
+      <div class="brand">
+        <div class="brand-mark"><img src="logo_rodovitor.png" alt=""></div>
+        <div class="brand-copy">
+          <strong>Central CT-e</strong>
+          <span>DACTE · Web Local</span>
+        </div>
+      </div>
+
+      <nav id="main-nav" class="nav-list">
+        <button class="nav-item active" data-page="dashboard"><img src="icons/home.svg" alt=""><span>Painel Geral</span></button>
+        <button class="nav-item" data-page="xml"><img src="icons/file-search.svg" alt=""><span>Validação XML</span><em id="nav-xml-count">0</em></button>
+        <button class="nav-item" data-page="invoices"><img src="icons/file-invoice.svg" alt=""><span>Faturas</span><em id="nav-invoice-count">0</em></button>
+        <button class="nav-item" data-page="audit"><img src="icons/shield-search.svg" alt=""><span>Auditoria Técnica</span></button>
+        <button class="nav-item" data-page="partners"><img src="icons/users.svg" alt=""><span>Parceiros / Tabelas</span></button>
+        <button class="nav-item" data-page="signature"><img src="icons/signature.svg" alt=""><span>Assinatura / PDF</span></button>
+        <button class="nav-item" data-page="reports"><img src="icons/report.svg" alt=""><span>Relatórios</span></button>
+        <button class="nav-item" data-page="settings"><img src="icons/settings.svg" alt=""><span>Configurações</span></button>
+      </nav>
+
+      <div class="sidebar-footer">
+        <div id="engine-state" class="engine-state warning">
+          <span class="state-dot"></span>
+          <div><strong>Motor RC26.6</strong><small>Ponte em preparação</small></div>
+        </div>
+        <button id="collapse-sidebar" class="icon-button sidebar-collapse" title="Recolher menu" aria-label="Recolher menu">‹</button>
+      </div>
+    </aside>
+
+    <div id="mobile-overlay" class="mobile-overlay"></div>
+
+    <div class="workspace">
+      <header class="topbar">
+        <button id="mobile-menu" class="icon-button mobile-menu" aria-label="Abrir menu">☰</button>
+        <div class="global-search-wrap">
+          <img src="icons/file-search.svg" alt="">
+          <input id="global-search" type="search" autocomplete="off" placeholder="Buscar CT-e, parceiro, NF, fatura ou relatório…" aria-label="Busca global">
+          <kbd>Ctrl K</kbd>
+          <div id="global-results" class="search-results hidden"></div>
+        </div>
+        <div class="topbar-actions">
+          <span id="connection-chip" class="connection-chip connecting"><span></span>Conectando</span>
+          <button id="user-chip" class="user-chip hidden" type="button" title="Minha conta e senha"><span id="user-avatar">U</span><span><strong id="user-display-name">Usuário</strong><small id="user-role">Perfil</small></span></button>
+          <button id="logout-button" class="button ghost hidden" type="button"><img src="icons/lock.svg" alt="">Sair</button>
+          <button id="open-qa" class="button ghost qa-submit-access hidden"><img src="icons/alert.svg" alt="">Anotar bug ou melhoria</button>
+          <button id="refresh-all" class="icon-button" title="Atualizar dados" aria-label="Atualizar dados"><img src="icons/refresh.svg" alt=""></button>
+        </div>
+      </header>
+
+      <main class="main-content">
+        <section id="page-dashboard" class="page active" data-page="dashboard">
+          <div class="page-heading">
+            <div><h1>Painel Geral</h1><p>Visão consolidada dos documentos, validações oficiais e estado da migração web.</p></div>
+            <div class="page-actions"><button class="button primary" data-nav="xml"><img src="icons/upload.svg" alt="">Importar XMLs</button></div>
+          </div>
+          <div id="dashboard-banner" class="notice success"><strong>Modo seguro MVP13:</strong> login obrigatório, workspace separado por usuário e motor RC26.6 como única fonte comercial. A interface continua sem reproduzir fórmulas.</div>
+          <div id="dashboard-cards" class="metric-grid"></div>
+          <div class="content-grid two-one">
+            <article class="panel">
+              <div class="panel-header"><div><h2>XMLs recentes</h2><p>Últimos documentos reconhecidos pela camada web.</p></div><button class="text-button" data-nav="xml">Ver todos →</button></div>
+              <div class="table-wrap"><table><thead><tr><th>CT-e</th><th>Parceiro</th><th>NF / comprovante</th><th>Valor XML</th><th>Status</th></tr></thead><tbody id="dashboard-xml-body"></tbody></table></div>
+            </article>
+            <article id="dashboard-readiness-panel" class="panel developer-only hidden">
+              <div class="panel-header"><div><h2>Prontidão web</h2><p>Estado das camadas para a futura VPS.</p></div></div>
+              <div id="readiness-list" class="readiness-list"></div>
+            </article>
+          </div>
+        </section>
+
+        <section id="page-xml" class="page" data-page="xml">
+          <div class="page-heading">
+            <div><h1>Validação XML</h1><p>Importação, Base SSW Web e validação comercial pelo serviço oficial RC26.6.</p></div>
+          </div>
+          <div class="action-toolbar responsive-toolbar">
+            <button id="add-xml" class="button primary"><img src="icons/upload.svg" alt="">Adicionar XMLs</button>
+            <button id="add-xml-folder" class="button"><img src="icons/folder.svg" alt="">Adicionar pasta</button>
+            <button id="process-xml" class="button success"><img src="icons/check.svg" alt="">Processar validação</button>
+            <button id="clear-xml-list" class="button danger-outline"><img src="icons/clear.svg" alt="">Limpar lista</button>
+            <button id="add-complementary-info" class="button"><img src="icons/file-search.svg" alt="">Informação complementar</button>
+            <button id="add-table" class="button"><img src="icons/users.svg" alt="">Tabela de parceiros</button>
+            <button class="button ghost" data-nav="audit"><img src="icons/shield-search.svg" alt="">Abrir auditoria</button>
+          </div>
+          <input id="xml-input" class="hidden" type="file" accept=".xml,text/xml,application/xml" multiple>
+          <input id="xml-folder-input" class="hidden" type="file" accept=".xml,text/xml,application/xml" multiple webkitdirectory directory>
+          <input id="table-input" class="hidden" type="file" accept=".xlsx">
+
+          <div id="xml-processing-status" class="notice neutral"><strong>Serviço XML:</strong> verificando prontidão.</div>
+          <div id="xml-task-progress" class="signature-generation-progress xml-task-progress hidden" aria-live="polite" aria-atomic="true">
+            <div class="signature-progress-heading"><span id="xml-task-title">Executando tarefa</span><strong id="xml-task-percent">0%</strong></div>
+            <div class="signature-progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="xml-task-bar"></span></div>
+            <div class="signature-progress-meta"><span id="xml-task-count">Preparando…</span><span id="xml-task-current">Aguardando início</span></div>
+            <small id="xml-task-message">O sistema mostrará aqui cada etapa da operação.</small>
+          </div>
+          <div id="xml-cards" class="metric-grid compact"></div>
+          <article class="panel table-panel">
+            <div class="filterbar">
+              <label class="filter-search"><img src="icons/filter.svg" alt=""><input id="xml-filter" type="search" placeholder="Filtrar por CT-e, parceiro, NF ou cidade"></label>
+              <select id="xml-status-filter" aria-label="Filtrar validação por status">
+                <option value="">Todos os status</option>
+                <option value="__not_ok__">Não OK / requer atenção</option>
+                <option value="__ok__">Somente OK</option>
+                <option value="__authorization_pending__">Aguardando autorização</option>
+                <option value="__manual__">Com baixa manual</option>
+              </select>
+              <span id="xml-selection-label" class="filter-caption">0 registros</span>
+            </div>
+            <div class="table-wrap large"><table class="data-table"><thead><tr><th>CT-e</th><th>Série</th><th>Parceiro</th><th>Destinatário</th><th>NF</th><th>Cidade</th><th>Tipo</th><th class="num">Valor XML</th><th class="num">Valor esperado</th><th class="num">Diferença</th><th>Status</th><th>Ação</th></tr></thead><tbody id="xml-table-body"></tbody></table></div>
+          </article>
+        </section>
+
+        <section id="page-invoices" class="page" data-page="invoices">
+          <div class="page-heading"><div><h1>Faturas</h1><p>Recebimento dos PDFs e preparação do fluxo financeiro oficial.</p></div></div>
+          <div class="action-toolbar responsive-toolbar">
+            <button id="add-invoices" class="button primary"><img src="icons/upload.svg" alt="">Adicionar faturas</button>
+            <button id="process-invoices" class="button success"><img src="icons/check.svg" alt="">Processar faturas</button>
+            <button id="clear-invoice-list" class="button danger-outline"><img src="icons/clear.svg" alt="">Limpar lista</button>
+            <button class="button" data-nav="reports"><img src="icons/report.svg" alt="">Relatório financeiro</button>
+          </div>
+          <input id="invoice-input" class="hidden" type="file" accept=".pdf,application/pdf" multiple>
+          <div id="invoice-processing-status" class="notice neutral"><strong>Serviço de faturas:</strong> verificando prontidão.</div>
+          <div id="invoice-cards" class="metric-grid compact"></div>
+          <article class="panel table-panel">
+            <div class="panel-header"><div><h2>Faturas identificadas</h2><p>Decisões financeiras publicadas pelo motor oficial RC26.6.</p></div></div>
+            <div class="filterbar"><label class="filter-search"><img src="icons/filter.svg" alt=""><input id="invoice-filter" type="search" placeholder="Filtrar por fatura, parceiro ou arquivo"></label><span id="invoice-count" class="filter-caption">0 faturas</span></div>
+            <div class="table-wrap large"><table><thead><tr><th>Fatura</th><th>Parceiro</th><th>Itens</th><th class="num">Valor total</th><th class="num">Liberado</th><th class="num">Retido</th><th>Status</th><th>Ação financeira</th></tr></thead><tbody id="invoice-table-body"></tbody></table></div>
+          </article>
+          <article id="invoice-file-panel" class="panel table-panel invoice-file-panel collapsed">
+            <div class="panel-header invoice-file-panel-header">
+              <div><h2>Conferência dos arquivos do lote</h2><p>Cada PDF permanece registrado com o resultado da leitura. Rejeitados, duplicados e não processados não desaparecem da lista.</p></div>
+              <div class="invoice-file-panel-actions"><span id="invoice-file-count" class="filter-caption">0 PDFs</span><button id="toggle-invoice-file-panel" class="button compact" type="button" aria-expanded="false" aria-controls="invoice-file-panel-content">Exibir detalhes</button></div>
+            </div>
+            <div id="invoice-file-panel-content" class="invoice-file-panel-content">
+              <div class="table-wrap invoice-file-table-wrap"><table class="data-table invoice-file-table"><thead><tr><th>Arquivo PDF</th><th>Resultado</th><th>Etapa</th><th>Fatura identificada</th><th>Motivo / orientação</th><th>Código</th></tr></thead><tbody id="invoice-file-table-body"></tbody></table></div>
+            </div>
+          </article>
+        </section>
+
+        <section id="page-audit" class="page" data-page="audit">
+          <div class="page-heading"><div><h1>Auditoria Técnica</h1><p>Rastreabilidade dos campos disponíveis, sem criar uma segunda regra de negócio.</p></div></div>
+          <div id="audit-cards" class="metric-grid compact"></div>
+          <article class="panel table-panel">
+            <div class="filterbar"><label class="filter-search"><img src="icons/filter.svg" alt=""><input id="audit-filter" type="search" placeholder="Filtrar auditoria"></label><select id="audit-view"><option value="all">Visão completa</option><option value="missing">Campos ausentes</option><option value="errors">Erros de leitura</option><option value="waiting">Aguardando motor</option></select></div>
+            <div class="table-wrap large"><table><thead><tr><th>CT-e</th><th>NF base</th><th>Método de leitura</th><th>Parceiro</th><th>Regra aplicada</th><th class="num">Base</th><th class="num">Percentual</th><th class="num">Esperado</th><th class="num">Diferença</th><th>Status</th><th>Motivo</th><th>Ação recomendada</th></tr></thead><tbody id="audit-table-body"></tbody></table></div>
+          </article>
+        </section>
+
+        <section id="page-partners" class="page" data-page="partners">
+          <div class="page-heading"><div><h1>Parceiros / Tabelas</h1><p>Consulta somente leitura da tabela comercial oficial.</p></div><div class="page-actions"><button id="reload-partners" class="button"><img src="icons/refresh.svg" alt="">Recarregar tabela</button></div></div>
+          <div id="partner-table-info" class="notice neutral"></div>
+          <div id="partner-cards" class="metric-grid compact"></div>
+          <article id="developer-partner-card" class="panel developer-only hidden">
+            <div class="panel-header"><div><h2>Arquivos separados por parceiro</h2><p>Baixe o modelo guiado, preencha somente as abas comerciais suportadas e importe um parceiro por vez. Regras ainda não previstas pelo motor devem ser encaminhadas para atualização da engine antes do cadastro.</p></div></div>
+            <div class="compact-actions"><button id="download-partner-model" class="button" type="button"><img src="icons/download.svg" alt="">Baixar modelo de cadastro</button><button id="download-partner-template" class="button" type="button"><img src="icons/download.svg" alt="">Exportar atuais em ZIP</button><button id="replace-partner-table" class="button primary" type="button"><img src="icons/upload.svg" alt="">Adicionar ou atualizar parceiro</button><input id="developer-partner-input" type="file" accept=".xlsx,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden></div>
+            <div id="partner-file-list" class="operation-list partner-file-list"><small>Carregando arquivos separados…</small></div>
+          </article>
+          <div class="content-grid one-two">
+            <article class="panel partner-list-panel"><div class="panel-header"><div><h2>Parceiros</h2><p>Selecione para consultar as regras.</p></div></div><label class="filter-search inset"><img src="icons/filter.svg" alt=""><input id="partner-filter" type="search" placeholder="Buscar parceiro"></label><div id="partner-list" class="partner-list"></div></article>
+            <article class="panel"><div class="panel-header"><div><h2 id="partner-rule-title">Regras comerciais</h2><p id="partner-rule-subtitle">Selecione um parceiro.</p></div></div><div class="table-wrap large"><table><thead><tr><th>Regra</th><th>Origem</th><th>Destino</th><th>Região</th><th class="num">Percentual</th><th class="num">Mínimo</th><th>Base</th><th>Pedágio</th><th>GRIS</th><th>Revisão</th></tr></thead><tbody id="partner-rule-body"></tbody></table></div></article>
+          </div>
+        </section>
+
+        <section id="page-signature" class="page" data-page="signature">
+          <div class="page-heading"><div><h1>Assinatura / PDF</h1><p>Perfis, tratamento da imagem, posicionamento visual e geração oficial do DACTE assinado.</p></div></div>
+          <div id="dacte-service-notice" class="notice neutral"></div>
+
+          <div class="signature-profile-grid">
+            <article class="panel signature-profile-panel">
+              <div class="panel-header"><div><h2>Perfil de assinatura</h2><p>Cadastre o responsável e importe uma imagem da assinatura.</p></div><button id="new-signature-profile" class="button" type="button">Novo perfil</button></div>
+              <label class="field-label">Perfil ativo<select id="signature-profile-select"><option value="">Nenhum perfil cadastrado</option></select></label>
+              <div class="form-grid two-columns">
+                <label class="field-label">Nome do perfil<input id="signature-profile-name" maxlength="80" placeholder="Ex.: Expedição"></label>
+                <label class="field-label">Responsável<input id="signature-person-name" maxlength="120" placeholder="Nome da pessoa"></label>
+                <label class="field-label">Cargo / setor<input id="signature-role" maxlength="120" placeholder="Ex.: Conferência"></label>
+                <label class="field-label">Título no carimbo<input id="signature-title" maxlength="60" value="REDESPACHO"></label>
+              </div>
+              <div class="compact-actions signature-profile-actions">
+                <button id="save-signature-profile" class="button primary" type="button">Salvar perfil</button>
+                <button id="download-signature-sheet" class="button" type="button">Folha de cadastro</button>
+                <button id="delete-signature-profile" class="button danger-outline" type="button">Excluir</button>
+              </div>
+              <div class="signature-upload-zone">
+                <input id="signature-image-input" type="file" accept="image/png,image/jpeg,image/webp,image/bmp,application/pdf,.pdf" hidden>
+                <button id="upload-signature-image" class="button" type="button"><img src="icons/upload.svg" alt="">Importar imagem ou PDF</button>
+                <label class="threshold-control">Remoção do fundo <input id="signature-threshold" type="range" min="205" max="252" value="242"><output id="signature-threshold-value">242</output></label>
+                <small>PNG, JPG, WEBP, BMP ou PDF. Na Folha de cadastro, assine dentro do quadro e envie o arquivo: a leitura e o recorte são automáticos. Outros PDFs podem exigir recorte manual.</small>
+              </div>
+              <div id="signature-pdf-candidates" class="signature-pdf-candidates hidden" aria-live="polite"></div>
+              <div id="signature-image-preview" class="signature-image-preview"><img src="icons/signature.svg" alt=""><span>Nenhuma assinatura importada.</span></div>
+            </article>
+
+            <article class="panel signature-editor-panel">
+              <div class="panel-header"><div><h2>Posicionamento visual</h2><p>Arraste o carimbo e use o canto azul para redimensionar.</p></div><div class="compact-actions"><button id="restore-signature-layout" class="text-button" type="button">Posição oficial</button><button id="save-signature-layout" class="button primary" type="button">Salvar posição</button></div></div>
+              <div class="signature-editor-wrap">
+                <div id="signature-editor-page" class="signature-editor-page" aria-label="Prévia física A4">
+                  <div class="dacte-wireframe">
+                    <div class="wire-title">DACTE — DOCUMENTO AUXILIAR DO CT-e</div>
+                    <div class="wire-row"></div><div class="wire-row short"></div><div class="wire-grid"></div><div class="wire-grid lower"></div>
+                    <div class="wire-footer">Prévia de posicionamento — confirme no PDF assinado</div>
+                  </div>
+                  <div id="signature-stamp-box" class="signature-stamp-box" tabindex="0">
+                    <img id="signature-stamp-solid" class="signature-stamp-solid" alt="Carimbo oficial de assinatura">
+                    <i class="signature-resize-handle" aria-hidden="true"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="signature-layout-controls">
+                <label>X (mm)<input id="signature-x" type="number" min="-15" max="195" step="0.1"></label>
+                <label>Y (mm)<input id="signature-y" type="number" min="-15" max="285" step="0.1"></label>
+                <label>Largura (mm)<input id="signature-width" type="number" min="42" max="96" step="0.1"></label>
+                <label>Rotação<input id="signature-rotation" type="number" min="-30" max="30" step="0.5"></label>
+                <label>Assinatura (%)<input id="signature-scale" type="number" min="40" max="250" step="1"></label>
+                <label>Ass. X (mm)<input id="signature-offset-x" type="number" min="-15" max="15" step="0.1"></label>
+                <label>Ass. Y (mm)<input id="signature-offset-y" type="number" min="-15" max="15" step="0.1"></label>
+                <label>Data no carimbo<input id="signature-date-text" type="text" maxlength="24" placeholder="dd/mm/aaaa"></label>
+              </div>
+              <div class="notice neutral compact-notice"><strong>Assinatura visual.</strong> Ela é aplicada somente ao HTML/PDF; não altera o XML e não substitui assinatura digital com certificado ICP-Brasil.</div>
+            </article>
+          </div>
+
+          <div class="content-grid one-two signature-grid">
+            <article class="panel">
+              <div class="panel-header signature-selection-header"><div><h2>CT-es para assinatura / PDF</h2><p>Filtre por parceiro, destino, resultado ou número antes de selecionar os documentos.</p></div><div class="compact-actions signature-selection-actions"><button id="select-all-dactes" class="text-button" type="button">Selecionar visíveis</button><button id="unselect-visible-dactes" class="text-button" type="button">Desmarcar visíveis</button><button id="clear-dacte-selection" class="text-button" type="button">Limpar tudo</button></div></div>
+              <div class="filterbar signature-filterbar signature-filterbar-advanced">
+                <label class="filter-search signature-filter-search"><img src="icons/filter.svg" alt=""><input id="signature-filter" type="search" placeholder="CT-e, NF, parceiro, destinatário, destino ou arquivo"></label>
+                <select id="signature-status-filter" aria-label="Disponibilidade do documento"><option value="ready" selected>Prontos para PDF</option><option value="selected">Selecionados</option><option value="all">Todos os CT-es</option><option value="pending">Ainda não processados</option></select>
+                <select id="signature-partner-filter" aria-label="Parceiro"><option value="all">Todos os parceiros</option></select>
+                <select id="signature-city-filter" aria-label="Destino"><option value="all">Todos os destinos</option></select>
+                <select id="signature-result-filter" aria-label="Resultado da validação"><option value="all">Todos os resultados</option><option value="__ok__">Somente OK</option><option value="__not_ok__">Não OK / requer atenção</option><option value="__authorization_pending__">Aguardando autorização</option><option value="__manual__">Com baixa manual</option></select>
+                <select id="signature-sort-filter" aria-label="Ordenação"><option value="cte_desc" selected>CT-e: maior → menor</option><option value="cte_asc">CT-e: menor → maior</option><option value="recent">Processados recentemente</option><option value="partner">Ordenar por parceiro</option><option value="city">Ordenar por destino</option><option value="value_desc">Valor: maior → menor</option><option value="value_asc">Valor: menor → maior</option></select>
+                <div class="signature-filter-footer"><span id="signature-visible-count" class="filter-caption">0 visíveis</span><button id="reset-signature-filters" class="text-button" type="button">Limpar filtros</button></div>
+              </div>
+              <div id="signature-selection-summary" class="selection-summary">Nenhum CT-e selecionado.</div>
+              <div id="signature-list" class="select-list"></div>
+            </article>
+            <article class="panel preview-panel">
+              <div class="panel-header"><div><h2>Prévia oficial do DACTE</h2><p>Compare o documento sem assinatura e o PDF assinado.</p></div><div class="compact-actions"><label class="compact-toggle"><input id="signature-include-compact" type="checkbox" checked><span>Exibir bloco compacto</span></label><button id="generate-preview" class="button" type="button"><img src="icons/eye.svg" alt="">Sem assinatura</button><button id="generate-signed-preview" class="button primary" type="button"><img src="icons/signature.svg" alt="">Prévia assinada</button></div></div>
+              <div id="dacte-preview-shell" class="dacte-preview-shell">
+                <div id="dacte-preview-toolbar" class="dacte-preview-toolbar hidden">
+                  <div class="preview-toolbar-group"><strong id="dacte-preview-title">Documento</strong><span id="dacte-preview-status">Pronto</span></div>
+                  <div class="preview-toolbar-actions">
+                    <label>Visualização<select id="dacte-preview-zoom"><option value="FitH">Ajustar largura</option><option value="Fit">Página inteira</option><option value="100">100%</option><option value="125">125%</option><option value="150">150%</option><option value="200">200%</option></select></label>
+                    <button id="open-dacte-preview" class="button compact" type="button"><img src="icons/eye.svg" alt="">Nova aba</button>
+                    <button id="download-dacte-preview" class="button compact" type="button"><img src="icons/download.svg" alt="">Baixar</button>
+                    <button id="fullscreen-dacte-preview" class="button compact primary" type="button"><img src="icons/expand.svg" alt="">Tela cheia</button>
+                  </div>
+                </div>
+                <div id="dacte-preview" class="document-preview"><img src="icons/file-invoice.svg" alt=""><strong>Nenhum CT-e selecionado</strong><span>A interface não recalcula frete ou valores comerciais.</span></div>
+              </div>
+              <div class="dacte-actions grouped-actions">
+                <div class="official-generation-group"><strong>Oficial sem assinatura</strong><button id="generate-dacte-batch" class="button"><img src="icons/download.svg" alt="">Lote PDF</button><button id="generate-dacte-individuals" class="button"><img src="icons/folder.svg" alt="">Individuais</button>
+                  <div id="dacte-generation-progress" class="signature-generation-progress hidden" aria-live="polite" aria-atomic="true">
+                    <div class="signature-progress-heading"><span id="dacte-progress-title">Gerando DACTEs oficiais</span><strong id="dacte-progress-percent">0%</strong></div>
+                    <div class="signature-progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="dacte-progress-bar"></span></div>
+                    <div class="signature-progress-meta"><span id="dacte-progress-count">0 de 0</span><span id="dacte-progress-current">Preparando…</span></div>
+                    <small id="dacte-progress-message">Aguardando início da geração.</small>
+                  </div>
+                </div>
+                <div class="signed-generation-group"><strong>Com assinatura visual</strong><button id="generate-signed-dacte-batch" class="button primary"><img src="icons/download.svg" alt="">Lote assinado</button><button id="generate-signed-dacte-individuals" class="button"><img src="icons/folder.svg" alt="">Assinados (.zip)</button>
+                  <div id="signature-generation-progress" class="signature-generation-progress hidden" aria-live="polite" aria-atomic="true">
+                    <div class="signature-progress-heading"><span id="signature-progress-title">Gerando DACTEs assinados</span><strong id="signature-progress-percent">0%</strong></div>
+                    <div class="signature-progress-track" role="progressbar" aria-valuemin="0" aria-valuemax="100" aria-valuenow="0"><span id="signature-progress-bar"></span></div>
+                    <div class="signature-progress-meta"><span id="signature-progress-count">0 de 0</span><span id="signature-progress-current">Preparando…</span></div>
+                    <small id="signature-progress-message">Aguardando início da geração.</small>
+                  </div>
+                </div>
+              </div>
+            </article>
+          </div>
+        </section>
+
+        <section id="page-reports" class="page" data-page="reports">
+          <div class="page-heading"><div><h1>Relatórios</h1><p>Geração oficial RC26.6 e histórico de arquivos operacionais.</p></div></div>
+          <div id="report-service-notice" class="notice neutral"></div>
+          <div class="report-actions">
+            <article class="action-card"><img src="icons/report.svg" alt=""><div><h2>Validação XML — XLSX oficial</h2><p>Gera as abas Painel, Atenção, Detalhamento e Auditoria Técnica a partir da fotografia já publicada pelo motor.</p></div><div class="action-buttons"><button id="generate-xml-xlsx" class="button primary">Gerar XLSX</button><button id="export-xml-csv" class="button">CSV auxiliar</button></div></article>
+            <article class="action-card"><img src="icons/file-invoice.svg" alt=""><div><h2>Faturas — XLSX oficial</h2><p>Gera o relatório executivo com pagamento atual, pagamento futuro, problema interno e auditoria completa.</p></div><div class="action-buttons"><button id="generate-invoice-xlsx" class="button primary">Gerar XLSX</button><button id="generate-invoice-problems-xlsx" class="button">Somente pendências</button></div></article>
+            <article id="qa-report-card" class="action-card qa-view-access hidden"><img src="icons/alert.svg" alt=""><div><h2>Bugs e melhorias</h2><p>Exporta o caderno global de homologação registrado por todos os usuários.</p></div><button id="export-qa-json" class="button">Exportar ZIP com imagens</button></article>
+          </div>
+          <article class="panel table-panel"><div class="panel-header"><div><h2>Histórico de documentos</h2><p>Arquivos operacionais encontrados no projeto e na saída da aplicação web.</p></div></div><div class="table-wrap large"><table><thead><tr><th>Arquivo</th><th>Módulo</th><th>Formato</th><th>Modificado</th><th class="num">Tamanho</th><th></th></tr></thead><tbody id="report-table-body"></tbody></table></div></article>
+        </section>
+
+        <section id="page-settings" class="page" data-page="settings">
+          <div class="page-heading"><div><h1>Configurações</h1><p>Preferências, backup, restauração, monitoramento e recuperação manual.</p></div></div>
+          <div class="settings-grid">
+            <article class="panel settings-card"><h2>Aparência</h2><label>Tema<select id="setting-theme"><option value="claro">Claro</option><option value="escuro">Escuro</option><option value="sistema">Usar sistema</option></select></label><label>Densidade das tabelas<select id="setting-density"><option value="confortavel">Confortável</option><option value="compacta">Compacta</option></select></label><label>Menu lateral<select id="setting-sidebar"><option value="padrao">Padrão</option><option value="compacta">Compacto</option></select></label><label>Tela inicial<select id="setting-start-page"><option value="dashboard">Painel Geral</option><option value="xml">Validação XML</option><option value="invoices">Faturas</option><option value="audit">Auditoria Técnica</option><option value="partners">Parceiros / Tabelas</option><option value="signature">Assinatura / PDF</option><option value="reports">Relatórios</option><option value="settings">Configurações</option></select></label><button id="save-settings" class="button primary">Salvar preferências</button></article>
+            <article id="my-account-card" class="panel settings-card"><h2>Minha conta</h2><div id="my-account-summary" class="security-summary"></div><button id="open-own-password" class="button" type="button"><img src="icons/lock.svg" alt="">Alterar minha senha</button></article>
+            <article id="environment-local-card" class="panel settings-card developer-only hidden"><h2>Ambiente local</h2><dl id="environment-details" class="definition-list"></dl></article>
+            <article id="security-readiness-card" class="panel settings-card security-card developer-only hidden"><h2>Segurança e prontidão</h2><div id="security-summary" class="security-summary"><p>Verificando sessão e diretórios…</p></div><div class="compact-actions"><button id="refresh-system-health" class="button" type="button"><img src="icons/refresh.svg" alt="">Verificar</button><button id="create-backup" class="button primary hidden" type="button"><img src="icons/download.svg" alt="">Criar backup</button><button id="restore-backup" class="button danger-outline hidden" type="button"><img src="icons/upload.svg" alt="">Restaurar backup</button><input id="restore-backup-file" type="file" accept=".zip,application/zip" hidden></div><div id="backup-history" class="operation-list"></div></article>
+            <article id="server-domain-card" class="panel settings-card operations-card developer-only hidden"><h2>Servidor e domínio</h2><div id="operations-monitor" class="security-summary"><p>Verificando porta, túnel e domínio…</p></div><small class="settings-hint">O servidor continua manual: mantenha a janela aberta enquanto o site estiver em uso.</small></article>
+            <article class="panel settings-card recovery-card"><h2>Recuperação de processamentos</h2><p class="settings-hint">Execuções interrompidas por queda, reinício ou fechamento inesperado aparecem aqui.</p><div id="recovery-job-list" class="operation-list"><p>Nenhuma execução interrompida.</p></div></article>
+            <article id="admin-users-card" class="panel settings-card admin-users-card developer-only hidden"><div class="panel-header"><div><h2>Gestão de usuários</h2><p>Cadastre contas e administre dados, perfis, senhas e sessões.</p></div></div><form id="admin-user-form" class="admin-user-form"><label>Usuário<input name="username" minlength="3" maxlength="40" required placeholder="operador.01"></label><label>Nome<input name="display_name" maxlength="100" required placeholder="Nome do colaborador"></label><label>Perfil<select name="role"><option value="operador">Operador</option><option value="consulta">Consulta</option><option value="admin">Administrador</option><option id="developer-role-option" value="desenvolvedor" class="hidden">Desenvolvedor</option></select></label><label>Senha inicial<input name="password" type="password" minlength="10" maxlength="200" required autocomplete="new-password" placeholder="Letra, número e 10+ caracteres"></label><label class="checkbox-field span-2"><input name="must_change_password" type="checkbox" checked> Exigir alteração da senha no primeiro acesso</label><button class="button primary" type="submit">Cadastrar usuário</button></form><div id="admin-user-list" class="admin-user-list"></div></article>
+            <article id="qa-settings-card" class="panel settings-card qa-summary-card qa-view-access hidden"><h2>Homologação global</h2><div id="qa-summary"></div><div id="qa-note-list" class="qa-note-list"></div><div class="compact-actions"><button class="button" id="open-qa-settings"><img src="icons/alert.svg" alt="">Registrar novo item</button><button class="button danger-outline developer-only hidden" id="clear-qa-notebook" type="button"><img src="icons/clear.svg" alt="">Limpar caderno</button></div></article>
+            <article id="base-management-card" class="panel settings-card hidden"><h2>Base SSW Web</h2><p class="settings-hint">A Base é um conjunto de planilhas .sswweb. A importação substitui o conjunto importado anterior somente depois da validação completa.</p><div id="base-management-summary" class="security-summary"></div><div class="compact-actions"><button id="replace-base-set" class="button danger-outline" type="button"><img src="icons/upload.svg" alt="">Importar e substituir base</button><input id="developer-base-input" type="file" accept=".sswweb" multiple hidden></div></article>
+            <article id="postgres-integration-card" class="panel settings-card developer-only hidden"><h2>PostgreSQL SSW — somente leitura</h2><p class="settings-hint">Integração PostgreSQL mantida em modo sombra na R12.13. O snapshot do banco pode ser comparado com a Base SSW, mas não substitui automaticamente os arquivos .sswweb nem altera o motor RC26.6.</p><div id="postgres-integration-summary" class="security-summary"><p>Aguardando status da integração…</p></div><div class="compact-actions"><button id="postgres-refresh-status" class="button" type="button"><img src="icons/refresh.svg" alt="">Atualizar status</button><button id="postgres-test-direct" class="button" type="button">Testar acesso direto</button><button id="postgres-sync-direct" class="button" type="button">Sincronizar direto</button><button id="postgres-compare-base" class="button primary" type="button">Comparar com Base SSW</button></div><div class="compact-actions"><button id="postgres-rotate-bridge-token" class="button danger-outline" type="button"><img src="icons/lock.svg" alt="">Gerar token da ponte</button><a id="postgres-download-bridge" class="button" href="/api/developer/postgres/bridge-script"><img src="icons/download.svg" alt="">Baixar ponte PowerShell</a></div><div id="postgres-bridge-token-box" class="bridge-token-box hidden"><small>Token mostrado somente uma vez. Copie para o computador dentro da rede da empresa.</small><code id="postgres-bridge-token"></code><button id="postgres-copy-bridge-token" class="text-button" type="button">Copiar token</button></div><div id="postgres-comparison-summary" class="security-summary"></div></article>
+            <article id="developer-console-card" class="panel settings-card developer-only hidden"><h2>Configuração extra — Desenvolvedor</h2><p class="settings-hint">Homologação é global: todos podem relatar, mas somente o Desenvolvedor visualiza quantidades, lista completa e exportação. Aqui permanecem apenas liberações técnicas adicionais.</p><div class="developer-feature-list"><label><input type="checkbox" data-feature="beta_admin"> Funções beta para Administrador</label><label><input type="checkbox" data-feature="beta_operador"> Funções beta para Operador</label><label><input type="checkbox" data-feature="technical_reports_admin"> Logs e relatórios técnicos para Administrador</label></div><button id="save-developer-features" class="button primary" type="button">Salvar configuração extra</button><small class="settings-hint">O primeiro Desenvolvedor é criado localmente pelo arquivo CRIAR_PRIMEIRO_DESENVOLVEDOR.bat. Depois, esse perfil pode criar outros Desenvolvedores.</small></article>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <aside id="detail-drawer" class="detail-drawer" aria-hidden="true"><div class="drawer-header"><div><small>Detalhes do registro</small><h2 id="drawer-title">Documento</h2></div><button id="close-drawer" class="icon-button" aria-label="Fechar">×</button></div><div id="drawer-content" class="drawer-content"></div></aside>
+  <div id="drawer-backdrop" class="drawer-backdrop"></div>
+
+  <div id="complementary-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="complementary-title">
+    <form id="complementary-form" class="modal">
+      <div class="modal-header"><div><small>DACTE / impressão</small><h2 id="complementary-title">Adicionar informação complementar</h2></div><button type="button" class="icon-button complementary-close">×</button></div>
+      <div class="form-grid">
+        <div class="span-2 complementary-explanation">
+          <strong id="complementary-target-summary">Selecione os CT-es pela busca ou filtro da lista.</strong>
+          <p>A informação será impressa abaixo do cálculo compacto. O XML fiscal original não será alterado.</p>
+        </div>
+        <label class="span-2">Informação complementar
+          <textarea id="complementary-text" name="text" rows="8" maxlength="600" placeholder="Digite a observação que deverá aparecer no DACTE."></textarea>
+          <small id="complementary-counter" class="character-counter">0/600 caracteres</small>
+        </label>
+      </div>
+      <div class="modal-actions complementary-actions"><button type="button" id="remove-complementary-info" class="button danger-outline">Remover dos filtrados</button><span class="modal-action-spacer"></span><button type="button" class="button complementary-close">Cancelar</button><button type="submit" class="button primary">Aplicar aos filtrados</button></div>
+    </form>
+  </div>
+
+
+  <div id="signature-crop-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="signature-crop-title">
+    <div class="modal signature-crop-modal">
+      <div class="modal-header"><div><small>Assinatura importada do PDF</small><h2 id="signature-crop-title">Recorte somente o bloco da assinatura</h2></div><button type="button" class="icon-button signature-crop-close">×</button></div>
+      <p class="crop-instructions">Arraste sobre a assinatura. A folha inteira nunca será aplicada ao DACTE. Após selecionar, confirme o recorte.</p>
+      <div id="signature-crop-stage" class="signature-crop-stage"><canvas id="signature-crop-canvas"></canvas><div id="signature-crop-selection" class="signature-crop-selection hidden"></div></div>
+      <small id="signature-crop-status" class="settings-hint">Nenhuma área selecionada.</small>
+      <div class="modal-actions"><button type="button" id="reset-signature-crop" class="button">Limpar seleção</button><span class="modal-action-spacer"></span><button type="button" class="button signature-crop-close">Cancelar</button><button type="button" id="apply-signature-crop" class="button primary">Usar somente o recorte</button></div>
+    </div>
+  </div>
+
+  <div id="qa-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="qa-title">
+    <form id="qa-form" class="modal">
+      <div class="modal-header"><div><small>Caderno de homologação</small><h2 id="qa-title">Registrar bug ou melhoria</h2></div><button type="button" class="icon-button modal-close">×</button></div>
+      <div class="form-grid">
+        <label>Tipo<select name="type"><option value="bug">Bug</option><option value="melhoria">Melhoria</option><option value="regra">Regra de negócio</option><option value="visual">Problema visual</option></select></label>
+        <label>Tela<select name="page"><option>Painel Geral</option><option>Validação XML</option><option>Faturas</option><option>Auditoria Técnica</option><option>Parceiros / Tabelas</option><option>Assinatura / PDF</option><option>Relatórios</option><option>Configurações</option><option>Geral</option></select></label>
+        <label>Gravidade<select name="severity"><option value="baixa">Baixa</option><option value="média" selected>Média</option><option value="alta">Alta</option><option value="crítica">Crítica</option></select></label>
+        <label class="span-2">Título<input name="title" required maxlength="200" placeholder="Resumo curto do que aconteceu"></label>
+        <label class="span-2">Comportamento observado<textarea name="observed" rows="4" placeholder="Descreva o que apareceu na tela"></textarea></label>
+        <label class="span-2">Comportamento esperado<textarea name="expected" rows="3" placeholder="Descreva como deveria funcionar"></textarea></label>
+        <label class="span-2 qa-attachment-field">Imagem ou captura de tela (opcional)<input id="qa-attachment" name="attachment" type="file" accept="image/png,image/jpeg,image/webp"><small>PNG, JPG ou WEBP, até 6 MB.</small></label>
+        <div id="qa-attachment-preview" class="qa-attachment-preview span-2 hidden"></div>
+      </div>
+      <div class="modal-actions"><button type="button" class="button modal-close">Cancelar</button><button type="submit" class="button primary">Salvar anotação</button></div>
+    </form>
+  </div>
+
+  <div id="user-edit-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="user-edit-title">
+    <form id="user-edit-form" class="modal user-management-modal">
+      <div class="modal-header"><div><small>Somente Desenvolvedor</small><h2 id="user-edit-title">Gerenciar usuário</h2></div><button type="button" class="icon-button user-edit-close">×</button></div>
+      <input type="hidden" name="user_id">
+      <section class="user-management-section">
+        <div class="section-heading"><div><strong>Dados e acesso</strong><small>Nome de acesso, identificação, perfil e situação da conta.</small></div></div>
+        <div class="form-grid">
+          <label class="span-2">Usuário<input name="username" minlength="3" maxlength="40" required autocomplete="off"></label>
+          <label class="span-2">Nome de exibição<input name="display_name" maxlength="100" required></label>
+          <label>Perfil<select name="role"><option value="consulta">Consulta</option><option value="operador">Operador</option><option value="admin">Administrador</option><option value="desenvolvedor">Desenvolvedor</option></select></label>
+          <label class="checkbox-field"><input name="active" type="checkbox" checked> Conta ativa</label>
+        </div>
+        <div id="user-edit-security-summary" class="user-security-summary"></div>
+        <p class="settings-hint">Alterar usuário, perfil ou situação encerra as sessões abertas. O workspace e os documentos permanecem preservados.</p>
+      </section>
+      <section id="user-password-management" class="user-management-section">
+        <div class="section-heading"><div><strong>Senha e sessões</strong><small>Redefina uma senha informada ou gere uma senha temporária.</small></div></div>
+        <div class="form-grid">
+          <label>Nova senha<input name="new_password" type="password" minlength="10" maxlength="200" autocomplete="new-password" placeholder="Letra, número e 10+ caracteres"></label>
+          <label>Confirmar senha<input name="confirm_password" type="password" minlength="10" maxlength="200" autocomplete="new-password" placeholder="Repita a nova senha"></label>
+          <label class="checkbox-field span-2"><input name="must_change_password" type="checkbox" checked> Exigir que o usuário altere a senha no próximo acesso</label>
+        </div>
+        <div id="temporary-password-result" class="temporary-password-result hidden"><div><small>Senha temporária — exibida somente agora</small><code id="temporary-password-value"></code></div><button id="copy-temporary-password" class="button" type="button">Copiar senha</button></div>
+        <div class="compact-actions user-password-actions"><button id="reset-user-password" class="button primary" type="button">Redefinir senha</button><button id="generate-temporary-password" class="button" type="button">Gerar senha temporária</button><button id="revoke-user-sessions" class="button danger-outline" type="button">Encerrar sessões abertas</button></div>
+        <small class="settings-hint">Toda redefinição encerra as sessões existentes. A senha nunca é salva em auditoria nem pode ser consultada depois.</small>
+      </section>
+      <div class="modal-actions"><button type="button" id="delete-user" class="button danger-outline">Excluir usuário</button><span class="modal-action-spacer"></span><button type="button" class="button user-edit-close">Cancelar</button><button type="submit" class="button primary">Salvar dados</button></div>
+    </form>
+  </div>
+
+  <div id="own-password-modal" class="modal-backdrop hidden" role="dialog" aria-modal="true" aria-labelledby="own-password-title">
+    <form id="own-password-form" class="modal compact-modal">
+      <div class="modal-header"><div><small id="own-password-kicker">Minha conta</small><h2 id="own-password-title">Alterar minha senha</h2></div><button id="own-password-close" type="button" class="icon-button own-password-close">×</button></div>
+      <p id="own-password-description" class="settings-hint">Informe a senha atual e defina uma nova senha para sua conta.</p>
+      <div class="form-grid">
+        <label class="span-2">Senha atual<input name="current_password" type="password" minlength="10" maxlength="200" required autocomplete="current-password"></label>
+        <label>Nova senha<input name="new_password" type="password" minlength="10" maxlength="200" required autocomplete="new-password"></label>
+        <label>Confirmar nova senha<input name="confirm_password" type="password" minlength="10" maxlength="200" required autocomplete="new-password"></label>
+      </div>
+      <div id="own-password-error" class="auth-error hidden"></div>
+      <div class="modal-actions"><button id="own-password-logout" type="button" class="button hidden">Sair</button><button id="own-password-cancel" type="button" class="button own-password-close">Cancelar</button><button type="submit" class="button primary">Alterar senha</button></div>
+    </form>
+  </div>
+
+  <section id="spamton-easter-egg" class="spamton-easter-egg hidden" aria-hidden="true" role="dialog" aria-modal="true" aria-labelledby="spamton-title">
+    <div class="spamton-grid" aria-hidden="true"></div>
+    <div class="spamton-scanlines" aria-hidden="true"></div>
+    <button id="spamton-close" class="spamton-close" type="button" aria-label="Fechar easter egg">×</button>
+    <div class="spamton-stage">
+      <p class="spamton-kicker">[[ CÓDIGO ACEITO ]]</p>
+      <div class="spamton-portrait-frame">
+        <img src="assets/easteregg/spamton.png" alt="Spamton em pixel art" class="spamton-portrait">
+      </div>
+      <h1 id="spamton-title">VOCÊ ENCONTROU O [[EASTER EGG]]</h1>
+      <p class="spamton-message">CENTRAL CT-e APRESENTA: O GRANDE NEGÓCIO ESCONDIDO.</p>
+      <div class="spamton-actions">
+        <button id="spamton-audio-toggle" class="spamton-audio-toggle" type="button">PAUSAR [MÚSICA]</button>
+        <small id="spamton-audio-status" aria-live="polite">REPRODUZINDO EM LOOP</small>
+      </div>
+      <p class="spamton-hint">Pressione <kbd>Esc</kbd> para voltar ao programa.</p>
+    </div>
+    <audio id="spamton-audio" src="assets/easteregg/spamton.mp3" preload="auto" loop></audio>
+  </section>
+
+  <div id="toast-region" class="toast-region" aria-live="polite"></div>
+  <script src="app.js"></script>
+</body>
+</html>

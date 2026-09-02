@@ -1,0 +1,15 @@
+CENTRAL CT-e / DACTE - VALIDAÇÃO R12.13.9
+Data: 01/09/2026
+Motor comercial preservado: RC26.6
+
+Correções alvo:
+1. CT-e 22066 (diferença automática R$ 3,49) não pode bloquear prévia/lote assinado quando a linha possui baixa manual APROVADA.
+2. O fluxo de assinatura pode chamar o guarda compacto mais de uma vez sem transformar OK MANUAL novamente em inconsistência.
+3. Fotografias antigas com status persistido OK MANUAL devem recuperar/sintetizar a decisão operacional mesmo se o JSON canônico não for localizado.
+4. Todo PDF com baixa manual e bloco compacto habilitado deve exibir CONTROLE INTERNO, status OK MANUAL/OK EXTRA AUTORIZADO e JUSTIFICATIVA DA APROVAÇÃO.
+5. A divergência automática permanece auditável; não é zerada pela aprovação manual.
+6. Falso OK automático sem baixa manual continua bloqueado.
+7. O launcher deve reiniciar um Python antigo na porta 8765 quando /api/health reportar versão diferente da R12.13.9.
+
+Testes direcionados R12.13.1-R12.13.9: 64 aprovados.
+A suíte completa do pacote Local + Online possui testes legados que exigem deploy/vps/compose.yaml, arquivo propositalmente ausente neste pacote enxuto; por isso esses dois módulos não são coletáveis no pacote local.

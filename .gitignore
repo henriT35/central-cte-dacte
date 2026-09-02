@@ -1,0 +1,63 @@
+# Segredos / ambiente
+.env
+.env.*
+!.env.example
+deploy/vps/.env
+*.pem
+*.key
+*.crt
+*.p12
+*.pfx
+
+# Estado persistente e autenticação
+web_local/data/security/
+web_local/data/workspaces/
+web_local/data/backups/
+web_local/data/runtime/
+web_local/data/qa/
+web_local/data/bridge/
+web_local/data/postgres/
+server_secret.bin
+sessions.sqlite3
+*.sqlite3
+
+# Dados operacionais
+bases/*.sswweb
+*.sswweb
+xmls/*
+faturas/*
+relatorios/*
+saida_html/*
+logs/*
+sessoes/*
+cache/*
+
+# Backups / monitor
+*.zip
+*.tar
+*.tar.gz
+*.bak
+deploy/vps/backups/*
+!deploy/vps/backups/.gitkeep
+deploy/vps/logs/*
+!deploy/vps/logs/.gitkeep
+deploy/vps/monitor/*
+!deploy/vps/monitor/.gitkeep
+
+# Python / IDE / SO
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+.idea/
+.vscode/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Windows build/runtime
+_internal/
+*.exe
+URL_ONLINE.txt
+cloudflared.exe

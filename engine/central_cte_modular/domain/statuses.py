@@ -1,0 +1,25 @@
+from __future__ import annotations
+
+from enum import Enum
+
+
+class StatusFamily(str, Enum):
+    NOT_PROCESSED = "NAO_PROCESSADO"
+    OK = "OK"
+    DIVERGENT = "DIVERGENTE"
+    REVIEW = "REVISAO"
+    NO_LINK = "SEM_BASE_OU_VINCULO"
+    NO_RULE = "SEM_CADASTRO_OU_TABELA"
+    ERROR = "ERRO_DE_LEITURA"
+    OTHER = "OUTROS"
+
+
+class ValidationStatus(str, Enum):
+    NOT_VALIDATED = "NÃO VALIDADO"
+    OK = "OK"
+    DIVERGENT = "DIVERGENTE"
+    REVIEW_REQUIRED = "REVISÃO NECESSÁRIA"
+    BASE_NOT_LOADED = "BASE NÃO CARREGADA"
+    NF_NOT_FOUND = "NF NÃO ENCONTRADA"
+    PARTNER_WITHOUT_RULE = "PARCEIRO SEM CADASTRO"
+    READ_ERROR = "ERRO DE LEITURA"

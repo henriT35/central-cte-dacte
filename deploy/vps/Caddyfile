@@ -1,0 +1,49 @@
+{
+    email {$LETSENCRYPT_EMAIL}
+    admin off
+}
+
+{$CENTRAL_CTE_DOMAIN} {
+    encode zstd gzip
+
+    # Limite acima do maior upload aceito pela aplicação (Base SSW: 200 MB).
+    request_body {
+        max_size 210MB
+    }
+
+    log {
+        output file /var/log/caddy/access.log {
+            roll_size 50MiB
+            roll_keep 10
+            roll_keep_for 720h
+        }
+        format json
+    }
+
+    @private_metrics path /api/metrics
+    respond @private_metrics 404
+
+    header {
+        -Server
+        Strict-Transport-Security "max-age=31536000; includeSubDomains"
+        X-Content-Type-Options "nosniff"
+        X-Frame-Options "DENY"
+        Referrer-Policy "no-referrer"
+        Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
+    }
+
+    reverse_proxy app:8765 {
+        health_uri /api/ready
+        health_interval 30s
+        health_timeout 10s
+        lb_try_duration 5s
+        header_up X-Forwarded-Proto {scheme}
+        header_up X-Forwarded-Host {host}
+        transport http {
+            dial_timeout 10s
+            response_header_timeout 10m
+            read_timeout 10m
+            write_timeout 10m
+        }
+    }
+}
