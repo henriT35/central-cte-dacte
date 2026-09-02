@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
 set -Eeuo pipefail
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-cd "$SCRIPT_DIR/.."
+# shellcheck source=deploy_common.sh
+source "$SCRIPT_DIR/deploy_common.sh"
+load_deploy_env
 if [[ $# -gt 0 ]]; then
-  docker compose --env-file .env logs -f --tail=200 "$@"
+  dc logs -f --tail=200 "$@"
 else
-  docker compose --env-file .env logs -f --tail=200
+  dc logs -f --tail=200
 fi

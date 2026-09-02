@@ -1,0 +1,12 @@
+services:
+  app:
+    environment:
+      # Acesso direto por HTTP. O cookie de sessão não pode usar Secure sem HTTPS.
+      CENTRAL_CTE_HTTPS: "0"
+      # No modo IP não existe proxy reverso na frente da aplicação.
+      CENTRAL_CTE_TRUST_PROXY: "0"
+      # Para restringir ao IP público, defina CENTRAL_CTE_ALLOWED_HOSTS no .env.
+      # O padrão "*" evita bloqueio quando a VPS recebe IP dinâmico/novo.
+      CENTRAL_CTE_ALLOWED_HOSTS: ${CENTRAL_CTE_ALLOWED_HOSTS:-*}
+    ports:
+      - "${CENTRAL_CTE_BIND_ADDRESS:-0.0.0.0}:${CENTRAL_CTE_PUBLIC_PORT:-8765}:8765"

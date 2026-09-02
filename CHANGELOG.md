@@ -1,3 +1,13 @@
+## Deploy VPS por IP + porta — 2026-09-02
+
+- Adicionado `CENTRAL_CTE_DEPLOY_MODE=ip|domain`.
+- Adicionado `compose.ip.yaml` para publicar `http://IP:8765` sem Caddy.
+- Caddy passou a usar profile `domain` e permanece desligado no modo IP.
+- `deploy.sh`, `preflight.sh`, `status.sh`, `update.sh`, `smoke_test.sh`, `load_test.sh`, backup e restore agora respeitam o modo configurado.
+- `configure_firewall.sh` abre 8765 no modo IP ou 80/443 no modo domínio.
+- Novo `setup_ip_mode.sh` cria `.env` com token forte automaticamente.
+- Mantido o código comercial R12.13.9 / motor RC26.6 sem alteração.
+
 # Changelog recente
 
 ## R12.13.9 — 2026-09-01

@@ -5,8 +5,9 @@ if [[ $# -lt 1 ]]; then
   exit 2
 fi
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" && pwd)"
-DEPLOY_DIR="$(cd -- "$SCRIPT_DIR/.." && pwd)"
-cd "$DEPLOY_DIR"
+# shellcheck source=deploy_common.sh
+source "$SCRIPT_DIR/deploy_common.sh"
+load_deploy_env
 BACKUP="$(realpath "$1")"
 EXPECTED="${2:-}"
 case "$BACKUP" in
@@ -19,12 +20,12 @@ echo "ATENÇÃO: os dados atuais serão substituídos por: $BACKUP"
 read -r -p "Digite RESTAURAR para continuar: " CONFIRM
 [[ "$CONFIRM" == "RESTAURAR" ]] || { echo "Cancelado."; exit 5; }
 
-docker compose --env-file .env stop app backup monitor
+dc stop app backup monitor
 ARGS=(python /app/deploy/vps/scripts/restore_backup.py "/backups/$(basename "$BACKUP")" --target /data --confirm)
 if [[ -n "$EXPECTED" ]]; then ARGS+=(--expected-sha256 "$EXPECTED"); fi
-docker compose --env-file .env run --rm --no-deps --user root \
+dc run --rm --no-deps --user root \
   -v "$DEPLOY_DIR/backups:/backups:ro" \
   --entrypoint "" app "${ARGS[@]}"
-docker compose --env-file .env up -d app backup monitor caddy
+dc up -d --remove-orphans
 
 echo "Restauração concluída. Execute scripts/status.sh."
