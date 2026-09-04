@@ -1,0 +1,15 @@
+{
+  "version": "RC27.14 WEB/WINDOWS MVP13 R12.13.10",
+  "engine": "RC26.6",
+  "date": "2026-09-04",
+  "scope": "FIRST_USER_DEVELOPER_BOOTSTRAP",
+  "changes": [
+    "Primeiro usuário de uma instalação nova passa a ser criado automaticamente como Desenvolvedor.",
+    "Endpoint /api/auth/setup usa o bootstrap Desenvolvedor e inicia a sessão com role desenvolvedor.",
+    "Fluxo visual de primeiro acesso remove a nomenclatura Administrador e informa as permissões do Desenvolvedor inicial.",
+    "setup_admin permanece apenas como alias de compatibilidade, mas também cria Desenvolvedor; não existe caminho de bootstrap inicial para Administrador.",
+    "Perfis Administrador existentes continuam válidos e nenhum usuário já cadastrado é promovido ou alterado automaticamente.",
+    "Imagem padrão Docker atualizada para central-cte-dacte:r12.13.10.",
+    "Motor comercial RC26.6 preservado."
+  ]
+}

@@ -76,6 +76,11 @@ bash scripts/deploy.sh
 
 Nesse modo o Caddy publica 80/443 e a aplicação volta a ficar somente na rede Docker interna.
 
+
+## Primeiro acesso
+
+Em uma instalação nova, ao abrir a Central pela primeira vez, a tela de bootstrap cria a primeira conta automaticamente com o perfil **Desenvolvedor**. Não é mais criado um Administrador como usuário inicial.
+
 ## Atualizar depois
 
 ```bash

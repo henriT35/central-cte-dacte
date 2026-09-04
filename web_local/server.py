@@ -34,7 +34,7 @@ from urllib.parse import parse_qs, unquote, urlparse
 from urllib.request import Request, urlopen
 from xml.etree import ElementTree as ET
 
-APP_VERSION = "RC27.14 WEB/WINDOWS MVP13 R12.13.9"
+APP_VERSION = "RC27.14 WEB/WINDOWS MVP13 R12.13.10"
 ENGINE_VERSION = "RC26.6"
 DEFAULT_HOST = "127.0.0.1"
 DEFAULT_PORT = 8765
@@ -2562,7 +2562,7 @@ class LocalWebHandler(BaseHTTPRequestHandler):
         try:
             if parsed.path == "/api/auth/setup":
                 payload = json.loads(self.read_body(256 * 1024).decode("utf-8") or "{}")
-                user = AUTH.setup_admin(payload.get("username"), payload.get("display_name"), payload.get("password"))
+                user = AUTH.setup_developer(payload.get("username"), payload.get("display_name"), payload.get("password"))
                 metric_increment("login_success_total")
                 token, session = AUTH.create_session(user)
                 self.user, self.session, self.session_token = user, session, token
@@ -3299,7 +3299,7 @@ def main() -> int:
     print(f"Central CT-e / DACTE {APP_VERSION}")
     print(f"Endereço local: {url}")
     print("Autenticação obrigatória, sessão HttpOnly e workspace separado por usuário.")
-    print("Primeiro acesso: crie o administrador na tela exibida no navegador.")
+    print("Primeiro acesso: crie o Desenvolvedor inicial na tela exibida no navegador.")
     print("Pressione Ctrl+C para encerrar.")
     print("=" * 68)
 

@@ -1,0 +1,14 @@
+CENTRAL CT-e / DACTE - VALIDAÇÃO R12.13.10
+Data: 04/09/2026
+Motor comercial preservado: RC26.6
+
+Correção alvo:
+1. Em instalação nova, /api/auth/setup deve criar o primeiro usuário com role desenvolvedor.
+2. O primeiro acesso não deve oferecer/criar Administrador como perfil inicial.
+3. O Desenvolvedor inicial deve poder administrar usuários e criar os demais perfis.
+4. setup_admin legado não pode reabrir um caminho para criar Administrador como primeiro usuário.
+5. Usuários existentes não devem ser migrados/promovidos automaticamente.
+6. Deploy por IP/porta e por domínio continuam suportados.
+
+Testes direcionados de bootstrap/segurança: 10 aprovados.
+Compilação Python dos arquivos alterados: OK.

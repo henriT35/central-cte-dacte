@@ -1,0 +1,19 @@
+CENTRAL CT-e / DACTE - UPDATE GITHUB R12.13.10
+Data: 04/09/2026
+
+OBJETIVO
+- Primeiro usuário de uma instalação nova passa a ser criado como DESENVOLVEDOR.
+- O primeiro acesso deixa de criar Administrador.
+- Perfis Administrador existentes continuam válidos; usuários já cadastrados não são alterados automaticamente.
+
+COMO APLICAR NO REPOSITORIO CLONADO
+1. Copie TODO o conteúdo desta pasta para a raiz do repositório central-cte-dacte.
+2. Aceite substituir os arquivos existentes.
+3. No PowerShell, dentro do repositório, execute:
+
+   git status
+   git add .
+   git commit -m "R12.13.10 - primeiro usuario Desenvolvedor"
+   git push origin main
+
+Depois, uma VPS nova clonada desse repositório criará o primeiro usuário como Desenvolvedor.

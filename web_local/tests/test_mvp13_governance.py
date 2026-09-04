@@ -135,8 +135,8 @@ class Mvp13GovernanceTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             auth = AuthManager(root)
-            admin = auth.setup_admin("admin.local", "Administrador", "SenhaSegura123")
-            developer = auth.create_first_developer_local("dev.local", "Desenvolvedor", "OutraSenha123")
+            developer = auth.setup_developer("dev.local", "Desenvolvedor", "SenhaSegura123")
+            admin = auth.create_user("admin.local", "Administrador", "admin", "OutraSenha123", actor=developer)
             operator = auth.create_user("operador.local", "Operador", "operador", "TerceiraSenha123", actor=admin)
 
             with self.assertRaises(PermissionError):

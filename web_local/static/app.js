@@ -246,12 +246,12 @@
     $("#auth-gate").classList.remove("hidden");
     $("#auth-display-name-wrap").classList.toggle("hidden", !setupRequired);
     $("#auth-confirm-wrap").classList.toggle("hidden", !setupRequired);
-    $("#auth-title").textContent = setupRequired ? "Criar administrador inicial" : "Entrar no sistema";
+    $("#auth-title").textContent = setupRequired ? "Criar Desenvolvedor inicial" : "Entrar no sistema";
     $("#auth-kicker").textContent = setupRequired ? "Primeiro acesso" : "Acesso local protegido";
     $("#auth-description").textContent = setupRequired
-      ? "Defina o primeiro administrador. Depois você poderá cadastrar operadores e usuários de consulta."
+      ? "Defina o primeiro usuário como Desenvolvedor. Esse perfil poderá administrar usuários, segurança e recursos técnicos do sistema."
       : "Use seu usuário e senha para acessar seu ambiente isolado.";
-    $("#auth-submit").textContent = setupRequired ? "Criar administrador" : "Entrar";
+    $("#auth-submit").textContent = setupRequired ? "Criar Desenvolvedor" : "Entrar";
     $("#auth-password").autocomplete = setupRequired ? "new-password" : "current-password";
     setAuthError("");
     window.setTimeout(() => $("#auth-username").focus(), 50);

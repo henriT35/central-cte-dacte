@@ -16,8 +16,8 @@ from security import AuthManager
 class R11UserManagementTests(unittest.TestCase):
     def make_auth(self, root: Path):
         auth = AuthManager(root)
-        admin = auth.setup_admin("admin.local", "Administrador", "SenhaAdmin123")
-        developer = auth.create_first_developer_local("dev.local", "Desenvolvedor", "SenhaDev1234")
+        developer = auth.setup_developer("dev.local", "Desenvolvedor", "SenhaDev1234")
+        admin = auth.create_user("admin.local", "Administrador", "admin", "SenhaAdmin123", actor=developer)
         operator = auth.create_user("operador.local", "Operador", "operador", "SenhaOperador123", actor=admin)
         return auth, admin, developer, operator
 
@@ -124,8 +124,7 @@ class R11UserManagementTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp)
             auth = AuthManager(root)
-            admin = auth.setup_admin("admin.local", "Administrador", "SenhaAdmin123")
-            developer = auth.create_first_developer_local("dev.local", "Desenvolvedor", "SenhaDev1234")
+            developer = auth.setup_developer("dev.local", "Desenvolvedor", "SenhaDev1234")
             created = auth.create_user(
                 "novo.local",
                 "Novo Usuário",

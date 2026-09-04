@@ -10,6 +10,14 @@
 
 # Changelog recente
 
+## R12.13.10 — 2026-09-04
+- O primeiro usuário de uma instalação nova passa a ser criado automaticamente como **Desenvolvedor**.
+- Removido o perfil Administrador do fluxo de bootstrap/primeiro acesso.
+- A rota `/api/auth/setup` agora cria o primeiro Desenvolvedor e já inicia a sessão com esse perfil.
+- Interface de primeiro acesso atualizada para deixar explícito que o perfil inicial é Desenvolvedor.
+- Perfis Administrador existentes continuam válidos; não há promoção ou alteração automática de usuários já cadastrados.
+- Motor comercial preservado em RC26.6.
+
 ## R12.13.9 — 2026-09-01
 - Corrige geração de prévia/lote assinado para CT-es aprovados manualmente.
 - Consolida decisão manual antes do render/assinatura.

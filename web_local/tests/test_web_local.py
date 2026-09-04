@@ -366,13 +366,13 @@ class WebLocalTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             manager = AuthManager(Path(tmp) / "security")
             self.assertTrue(manager.setup_required())
-            admin = manager.setup_admin("admin.teste", "Administrador Teste", "SenhaSegura123")
-            self.assertEqual(admin.role, "admin")
+            developer = manager.setup_developer("dev.teste", "Desenvolvedor Teste", "SenhaSegura123")
+            self.assertEqual(developer.role, "desenvolvedor")
             self.assertFalse(manager.setup_required())
-            authenticated = manager.authenticate("admin.teste", "SenhaSegura123", remote_key="127.0.0.1")
+            authenticated = manager.authenticate("dev.teste", "SenhaSegura123", remote_key="127.0.0.1")
             self.assertIsNotNone(authenticated)
-            self.assertIsNone(manager.authenticate("admin.teste", "senha-incorreta", remote_key="127.0.0.2"))
-            operator = manager.create_user("operador.01", "Operador Um", "operador", "Operador1234", actor=admin)
+            self.assertIsNone(manager.authenticate("dev.teste", "senha-incorreta", remote_key="127.0.0.2"))
+            operator = manager.create_user("operador.01", "Operador Um", "operador", "Operador1234", actor=developer)
             self.assertEqual(operator.role, "operador")
             token, session = manager.create_session(operator)
             self.assertTrue(token)
@@ -637,14 +637,14 @@ class WebLocalTests(unittest.TestCase):
         with tempfile.TemporaryDirectory() as tmp:
             root = Path(tmp) / "security"
             first = AuthManager(root)
-            admin = first.setup_admin("admin.persistente", "Admin Persistente", "SenhaPersistente123")
-            token, session = first.create_session(admin)
+            developer = first.setup_developer("dev.persistente", "Dev Persistente", "SenhaPersistente123")
+            token, session = first.create_session(developer)
             second = AuthManager(root)
             restored = second.get_session(token)
             self.assertIsNotNone(restored)
-            self.assertEqual(restored["user"].id, admin.id)
+            self.assertEqual(restored["user"].id, developer.id)
             self.assertTrue(second.verify_csrf(restored, session["csrf"]))
-            second.revoke_user_sessions(admin.id)
+            second.revoke_user_sessions(developer.id)
             self.assertIsNone(first.get_session(token))
 
     def test_prometheus_metrics_and_readiness_contract(self):

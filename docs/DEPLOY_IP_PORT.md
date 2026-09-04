@@ -44,6 +44,11 @@ bash scripts/deploy.sh
 
 O modo `domain` ativa o Caddy e HTTPS, deixando a aplicação novamente sem porta pública direta.
 
+
+## Primeiro acesso
+
+Em uma instalação nova, ao abrir a Central pela primeira vez, a tela de bootstrap cria a primeira conta automaticamente com o perfil **Desenvolvedor**. Não é mais criado um Administrador como usuário inicial.
+
 ## Segurança
 
 HTTP por IP não criptografa login, cookies nem documentos em trânsito. Este perfil deve ser tratado como contingência temporária. Não exponha a porta de métricas e mantenha o repositório privado.

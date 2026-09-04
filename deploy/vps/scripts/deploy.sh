@@ -70,7 +70,7 @@ fi
 echo "Construindo a aplicação..."
 dc build --pull app
 
-IMAGE="${CENTRAL_CTE_IMAGE:-central-cte-dacte:r12.13.9}"
+IMAGE="${CENTRAL_CTE_IMAGE:-central-cte-dacte:r12.13.10}"
 docker run --rm --user root \
   -v "$DEPLOY_DIR/backups:/target-backups" \
   -v "$DEPLOY_DIR/monitor:/target-monitor" \

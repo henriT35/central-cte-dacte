@@ -4,7 +4,7 @@ Esta camada disponibiliza a RC27.14 no navegador, preserva o aplicativo Windows 
 
 ## Modo local no Windows
 
-Execute `INICIAR_CENTRAL_CTE_WEB_LOCAL.bat`. O endereço padrão é `http://127.0.0.1:8765`; a porta muda automaticamente quando necessário. No primeiro acesso, crie o administrador. Não existe senha padrão no pacote.
+Execute `INICIAR_CENTRAL_CTE_WEB_LOCAL.bat`. O endereço padrão é `http://127.0.0.1:8765`; a porta muda automaticamente quando necessário. No primeiro acesso, crie o usuário Desenvolvedor inicial. Não existe senha padrão no pacote.
 
 ## Fluxos conectados
 
@@ -22,7 +22,7 @@ A interface não possui fórmulas comerciais. Ausência de informação continua
 ## Segurança e isolamento
 
 - autenticação obrigatória no modo servidor;
-- primeiro administrador configurado no navegador;
+- primeiro usuário configurado no navegador como Desenvolvedor;
 - senhas com PBKDF2-SHA256, sal aleatório e 310 mil iterações;
 - sessões persistentes, opacas e armazenadas pelo hash HMAC do token;
 - cookie `HttpOnly` e `SameSite=Strict`; na VPS também `Secure`;

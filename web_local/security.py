@@ -203,7 +203,13 @@ class AuthManager:
             role=str(record.get("role") or "consulta"),
         )
 
-    def setup_admin(self, username: Any, display_name: Any, password: Any) -> AuthenticatedUser:
+    def setup_developer(self, username: Any, display_name: Any, password: Any) -> AuthenticatedUser:
+        """Cria o primeiro usuário da instalação sempre como Desenvolvedor.
+
+        O bootstrap inicial não cria mais um Administrador. Isso garante que a
+        primeira conta tenha acesso às funções de governança, segurança e
+        manutenção necessárias para cadastrar e administrar os demais perfis.
+        """
         with self._lock:
             if not self.setup_required():
                 raise PermissionError("A configuração inicial já foi concluída.")
@@ -213,7 +219,7 @@ class AuthManager:
                 "id": uuid.uuid4().hex,
                 "username": username_value,
                 "display_name": str(display_name or username_value).strip()[:100] or username_value,
-                "role": "admin",
+                "role": "desenvolvedor",
                 "active": True,
                 "password": hash_password(password_value),
                 "created_at": now_iso(),
@@ -225,8 +231,18 @@ class AuthManager:
                 "password_reset_by": "",
             }
             self._save_users([record])
-            self.audit("auth.setup", user=self._public_user(record), outcome="success")
-            return self._public_user(record)
+            created = self._public_user(record)
+            self.audit(
+                "auth.setup",
+                user=created,
+                outcome="success",
+                metadata={"initial_role": "desenvolvedor"},
+            )
+            return created
+
+    def setup_admin(self, username: Any, display_name: Any, password: Any) -> AuthenticatedUser:
+        """Compatibilidade: o bootstrap legado agora também cria Desenvolvedor."""
+        return self.setup_developer(username, display_name, password)
 
     def create_user(
         self,

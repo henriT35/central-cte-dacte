@@ -1,4 +1,4 @@
-CENTRAL CT-e / DACTE - R12.13.9 LOCAL + ONLINE
+CENTRAL CT-e / DACTE - R12.13.10 LOCAL + ONLINE
 ================================================
 
 OBJETIVO
@@ -12,7 +12,7 @@ COMO USAR
 2. Dê dois cliques em:
    00_INICIAR_LOCAL_ONLINE.bat
 3. No primeiro uso, o navegador abrirá em http://127.0.0.1:8765.
-   Crie o primeiro administrador/desenvolvedor.
+   Crie o primeiro usuário; ele será criado automaticamente como Desenvolvedor.
 4. Volte à janela do inicializador e pressione ENTER.
 5. O programa baixa automaticamente o cloudflared oficial se necessário.
 6. Será criado um link HTTPS temporário terminado em trycloudflare.com.
@@ -29,8 +29,16 @@ IMPORTANTE
 - Para trazer usuários/dados antigos, restaure o backup de /data antes de usar.
 
 VERSÃO
-- Aplicação: RC27.14 WEB/WINDOWS MVP13 R12.13.9
+- Aplicação: RC27.14 WEB/WINDOWS MVP13 R12.13.10
 - Motor comercial: RC26.6
+
+
+R12.13.10 - 04/09/2026
+- Primeiro cadastro de uma instalação nova passa a ser sempre perfil Desenvolvedor.
+- Tela de Primeiro acesso deixa de criar Administrador.
+- O Desenvolvedor inicial recebe imediatamente as permissões de governança, usuários, segurança e recursos técnicos.
+- Usuários já existentes não são alterados automaticamente.
+- Motor comercial continua RC26.6.
 
 
 R12.13.6 - 31/08/2026

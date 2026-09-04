@@ -67,9 +67,7 @@ class Mvp12QaFixesTests(unittest.TestCase):
     def test_first_developer_is_created_only_once_locally(self):
         with tempfile.TemporaryDirectory() as tmp:
             auth = AuthManager(Path(tmp))
-            # setup inicial continua sendo administrador, sem credencial padrão
-            auth.setup_admin("admin.local", "Administrador", "SenhaSegura123")
-            developer = auth.create_first_developer_local("dev.local", "Desenvolvedor", "OutraSenha123")
+            developer = auth.setup_developer("dev.local", "Desenvolvedor", "SenhaSegura123")
             self.assertEqual(developer.role, "desenvolvedor")
             self.assertTrue(auth.developer_exists())
             with self.assertRaises(PermissionError):
@@ -78,10 +76,10 @@ class Mvp12QaFixesTests(unittest.TestCase):
     def test_only_developer_can_create_another_developer(self):
         with tempfile.TemporaryDirectory() as tmp:
             auth = AuthManager(Path(tmp))
-            admin = auth.setup_admin("admin.local", "Administrador", "SenhaSegura123")
+            dev = auth.setup_developer("dev.local", "Desenvolvedor", "SenhaSegura123")
+            admin = auth.create_user("admin.local", "Administrador", "admin", "OutraSenha123", actor=dev)
             with self.assertRaises(PermissionError):
                 auth.create_user("dev.invalido", "Dev", "desenvolvedor", "OutraSenha123", actor=admin)
-            dev = auth.create_first_developer_local("dev.local", "Desenvolvedor", "OutraSenha123")
             second = auth.create_user("dev.2", "Segundo Dev", "desenvolvedor", "MaisUmaSenha123", actor=dev)
             self.assertEqual(second.role, "desenvolvedor")
 

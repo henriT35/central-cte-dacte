@@ -5,7 +5,7 @@ services:
     build:
       context: ../..
       dockerfile: deploy/vps/Dockerfile
-    image: ${CENTRAL_CTE_IMAGE:-central-cte-dacte:r12.13.9}
+    image: ${CENTRAL_CTE_IMAGE:-central-cte-dacte:r12.13.10}
     environment:
       CENTRAL_CTE_DATA_ROOT: /data
       CENTRAL_CTE_HOST: 0.0.0.0
@@ -90,7 +90,7 @@ services:
       - backend
 
   backup:
-    image: ${CENTRAL_CTE_IMAGE:-central-cte-dacte:r12.13.9}
+    image: ${CENTRAL_CTE_IMAGE:-central-cte-dacte:r12.13.10}
     command: ["python", "-u", "/app/deploy/vps/scripts/backup_scheduler.py"]
     environment:
       BACKUP_SOURCE_ROOT: /data
@@ -129,7 +129,7 @@ services:
       - backend
 
   monitor:
-    image: ${CENTRAL_CTE_IMAGE:-central-cte-dacte:r12.13.9}
+    image: ${CENTRAL_CTE_IMAGE:-central-cte-dacte:r12.13.10}
     command: ["python", "-u", "/app/deploy/vps/scripts/monitor.py"]
     environment:
       MONITOR_URL: http://app:8765/api/ready

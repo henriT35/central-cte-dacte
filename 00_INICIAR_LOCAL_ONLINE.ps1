@@ -8,7 +8,7 @@ $TunnelLog = Join-Path $LogDir "cloudflare_quick_tunnel.log"
 $PidFile = Join-Path $Root ".local_online_pids.json"
 $UrlFile = Join-Path $Root "URL_ONLINE.txt"
 $LocalUrl = "http://127.0.0.1:8765"
-$ExpectedVersion = "RC27.14 WEB/WINDOWS MVP13 R12.13.9"
+$ExpectedVersion = "RC27.14 WEB/WINDOWS MVP13 R12.13.10"
 
 function Find-Python {
     foreach ($candidate in @("py.exe", "python.exe")) {
@@ -45,7 +45,7 @@ function Wait-Health {
 try {
     Write-Host ""
     Write-Host "============================================================" -ForegroundColor Cyan
-    Write-Host " CENTRAL CT-e / DACTE R12.13.9 - LOCAL + ONLINE" -ForegroundColor Cyan
+    Write-Host " CENTRAL CT-e / DACTE R12.13.10 - LOCAL + ONLINE" -ForegroundColor Cyan
     Write-Host "============================================================" -ForegroundColor Cyan
     Write-Host ""
 
@@ -88,7 +88,7 @@ try {
             $health = $null
         } else {
             $serverProcess = $null
-            Write-Host "[1/5] Servidor local R12.13.9 ja estava ativo." -ForegroundColor Green
+            Write-Host "[1/5] Servidor local R12.13.10 ja estava ativo." -ForegroundColor Green
         }
     }
 
@@ -118,7 +118,7 @@ try {
 
     if ($health.setup_required) {
         Write-Host ""
-        Write-Host "Primeiro acesso: crie o usuario administrador/desenvolvedor." -ForegroundColor Yellow
+        Write-Host "Primeiro acesso: crie o usuario Desenvolvedor inicial." -ForegroundColor Yellow
         Write-Host "Abrindo $LocalUrl ..."
         Start-Process $LocalUrl
         Write-Host "Depois de concluir o cadastro no navegador, volte aqui."

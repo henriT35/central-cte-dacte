@@ -1,11 +1,17 @@
 # Central CT-e / DACTE
 
-Versão de aplicação: **RC27.14 WEB/WINDOWS MVP13 R12.13.9**  
+Versão de aplicação: **RC27.14 WEB/WINDOWS MVP13 R12.13.10**  
 Motor comercial preservado: **RC26.6**
 
 Este repositório é a fonte limpa para **GitHub + VPS**. Dados operacionais, usuários, sessões, PDFs, XMLs, faturas, relatórios, backups e arquivos `.sswweb` reais não fazem parte do Git.
 
 > **Use um repositório GitHub PRIVADO.** As tabelas comerciais dos parceiros fazem parte do código/seed de implantação.
+
+## Primeiro usuário
+
+Em uma instalação nova, o primeiro cadastro feito pela tela de **Primeiro acesso** é criado automaticamente com o perfil **Desenvolvedor**. O bootstrap inicial não cria mais um Administrador.
+
+Depois desse primeiro acesso, o Desenvolvedor pode cadastrar e administrar os demais perfis normalmente.
 
 ## Estrutura principal
 
