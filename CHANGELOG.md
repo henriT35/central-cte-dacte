@@ -1,3 +1,11 @@
+# Changelog
+
+## Documentação mestre — 2026-10-02
+- Auditoria de continuidade: arquitetura, banco, API, telas, segurança, regras, fluxos, deploy, backup, testes, bugs, pendências e handoff.
+- Inventário dos 611 arquivos originais.
+- Nenhuma regra do motor RC26.6 alterada.
+- Registrados: 8 hashes divergentes, 2 testes de versão desatualizados e risco de runtime local no ZIP.
+
 ## Deploy VPS por IP + porta — 2026-09-02
 
 - Adicionado `CENTRAL_CTE_DEPLOY_MODE=ip|domain`.

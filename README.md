@@ -3,9 +3,12 @@
 Versão de aplicação: **RC27.14 WEB/WINDOWS MVP13 R12.13.10**  
 Motor comercial preservado: **RC26.6**
 
+## Documentação mestre
+Comece por [`docs/00_INDICE_GERAL.md`](docs/00_INDICE_GERAL.md), [`ESTADO_ATUAL.md`](ESTADO_ATUAL.md) e [`HANDOFF.md`](HANDOFF.md).
+
 Este repositório é a fonte limpa para **GitHub + VPS**. Dados operacionais, usuários, sessões, PDFs, XMLs, faturas, relatórios, backups e arquivos `.sswweb` reais não fazem parte do Git.
 
-> **Use um repositório GitHub PRIVADO.** As tabelas comerciais dos parceiros fazem parte do código/seed de implantação.
+> **Estado atual: repositório PÚBLICO por decisão do proprietário.** As tabelas comerciais dos parceiros fazem parte do código/seed e ficam publicamente acessíveis; valide confidencialidade/autorização.
 
 ## Primeiro usuário
 
